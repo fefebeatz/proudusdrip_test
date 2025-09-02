@@ -7,6 +7,7 @@ import { quickLinksData } from '@/constants'
 import Link from 'next/link'
 import { getCategories } from '@/lib/query'
 import { CategoryProps } from './ProductGrid'
+import FooterYear from './FooterYear'
 
 const Footer = async () => {
   const categories: CategoryProps[] = await getCategories()
@@ -89,7 +90,7 @@ const Footer = async () => {
         </div>
         <div className='border-t border-white py-8 bg-dark-color'>
           <p className='text-sm text-gray-200 text-center'>
-            &copy; {new Date().getFullYear()},{' '}
+            &copy; <FooterYear />,{' '}
             <Link href='/' className='hover:underline'>
               Proud Us Drip
             </Link>

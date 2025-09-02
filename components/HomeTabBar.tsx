@@ -32,8 +32,8 @@ const HomeTabBar = ({ selectedTab, onTabSelect, categories }: Props) => {
         <button
           className='border border-dark-color p-2 rounded-full transition-colors hover:bg-dark-color hover:text-white cursor-pointer hoverEffect'
           onClick={() => {
-            const randomIndex = Math.floor(Math.random() * categories.length)
-            onTabSelect(categories[randomIndex].title)
+            // const randomIndex = Math.floor(Math.random() * categories.length)
+            // onTabSelect(categories[randomIndex].title)
           }}
         >
           <Repeat className='h-5 w-5' />
