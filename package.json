@@ -6,8 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint",
-    "typegen": "npx sanity@latest schema extract && sanity@latest typegen generate"
+    "lint": "eslint"
   },
   "dependencies": {
     "@clerk/localizations": "^3.23.0",
