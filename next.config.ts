@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    taint: true,
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@sanity/client': require.resolve('@sanity/client'),
+    }
+    return config
+  },
+  transpilePackages: ['@sanity/client', 'sanity'],
 }
 
 export default nextConfig
