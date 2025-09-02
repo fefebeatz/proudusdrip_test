@@ -21,7 +21,12 @@ const nextConfig: NextConfig = {
     }
     return config
   },
-  transpilePackages: ['@sanity/client', 'sanity'],
+  transpilePackages: [
+    '@sanity/client',
+    'sanity',
+    '@sanity/image-url',
+    '@sanity/types',
+  ],
 }
 
 export default nextConfig
