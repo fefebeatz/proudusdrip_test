@@ -2,6 +2,10 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   /* config options here */
+  env: {
+    NEXT_PUBLIC_SANITY_DATASET: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    NEXT_PUBLIC_SANITY_PROJECT_ID: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  },
   images: {
     remotePatterns: [
       {
@@ -10,23 +14,6 @@ const nextConfig: NextConfig = {
         pathname: '/**', // toutes les images venant de Sanity
       },
     ],
-  },
-  // Add transpilation for Sanity modules
-  transpilePackages: ['@sanity/client', 'sanity'],
-
-  // Webpack configuration with proper typing
-  webpack: (config, { isServer }) => {
-    // Client-side fallbacks
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        os: false,
-      }
-    }
-
-    return config
   },
 }
 
