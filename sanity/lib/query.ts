@@ -1,7 +1,10 @@
 import { client } from '@/sanity/lib/client'
+import { defineQuery } from 'next-sanity'
+import { sanityFetch } from './live'
 
 // La bannière
-export const sliderQuery = `
+export async function getImagesBanner() {
+  const sliderQuery = `
   *[_type == "slider"][0]{
     title,
     images[]{
@@ -9,7 +12,10 @@ export const sliderQuery = `
       "url": image.asset->url
     }
   }
-`
+  `
+  const data = await client.fetch(sliderQuery)
+  return data.images
+}
 
 export async function getCategories() {
   const categories = await client.fetch(`
@@ -46,13 +52,19 @@ export async function getProducts() {
 
 // obtention de l'article à partir du slug
 export async function getProductBySlug(slug: string) {
-  const query = `*[_type == "product" && slug.current == $slug]| order(name asc) [0]`
-  const params = { slug }
+  const query = defineQuery(
+    `*[_type == "product" && slug.current == $slug]| order(name asc) [0]`
+  )
+
   try {
-    const product = await client.fetch(query, params)
-    return product
+    const product = await sanityFetch({
+      query,
+      params: { slug },
+    })
+    return product.data || null
   } catch (error) {
     console.error("Erreur lors de l'obtention du produit:", error)
+    return []
   }
 }
 

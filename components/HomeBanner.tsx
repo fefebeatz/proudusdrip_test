@@ -1,16 +1,16 @@
 import React from 'react'
 import BannerImages from './BannerImages'
 import Title from './Title'
-import { client } from '@/sanity/lib/client'
-import { sliderQuery } from '@/sanity/lib/query'
+import { getImagesBanner } from '@/sanity/lib/query'
 import ProductGrid from './ProductGrid'
 
 const HomeBanner = async () => {
-  const data = await client.fetch(sliderQuery)
+  // Obtention des images
+  const data = await getImagesBanner()
 
   return (
     <div className='flex flex-col items-center gap-5'>
-      <BannerImages images={data.images} />
+      <BannerImages images={data} />
 
       <Title className='text-3xl md:text-4xl uppercase font-bold text-center'>
         Style urbain. Attitude garantie.

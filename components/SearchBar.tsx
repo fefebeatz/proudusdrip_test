@@ -10,12 +10,13 @@ import {
 } from './ui/dialog'
 import { ProductType } from './ProductGrid'
 import { Input } from './ui/input'
-import { getSearchedProducts } from '@/sanity/lib/query'
+// import { getSearchedProducts } from '@/sanity/lib/query'
 import Link from 'next/link'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import PriceView from './PriceView'
 import AddToCardButton from './AddToCardButton'
+import { searchProductsAction } from '@/sanity/lib/actions'
 
 const SearchBar = () => {
   const [search, setSearch] = useState('')
@@ -31,7 +32,8 @@ const SearchBar = () => {
     }
     setLoading(true)
     try {
-      const data = await getSearchedProducts(search)
+      // const data = await getSearchedProducts(search)
+      const data = await searchProductsAction(search)
       setProducts(data)
     } catch (error) {
       console.error('Erreur lors de la récupération des articles.', error)
