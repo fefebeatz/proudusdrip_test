@@ -1,4 +1,3 @@
-'use server'
 import AddToCardButton from '@/components/AddToCardButton'
 import Container from '@/components/Container'
 import ImageView from '@/components/ImageView'
@@ -7,15 +6,17 @@ import ProductCaracteristics from '@/components/ProductCaracteristics'
 import { ProductType } from '@/components/ProductGrid'
 import ExpandableText from '@/components/SeeMore'
 import { Badge } from '@/components/ui/badge'
-import { getProductBySlug } from '@/sanity/lib/query'
+// import { getProductBySlug } from '@/sanity/lib/query'
 import { cn } from '@/lib/utils'
 import { BoxIcon, FileQuestion, Heart, Share2, Truck } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import React from 'react'
+import { getProductBySlugAction } from '@/sanity/lib/actions'
 
 const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params
-  const product: ProductType = await getProductBySlug(slug)
+  // const product: ProductType = await getProductBySlug(slug)
+  const product: ProductType = await getProductBySlugAction(slug)
 
   if (!product) return notFound()
 

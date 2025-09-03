@@ -11,7 +11,7 @@ export async function searchProductsAction(searchTerm: string) {
   return await getSearchedProducts(searchTerm)
 }
 
-export async function getProductAction(slug: string) {
+export async function getProductBySlugAction(slug: string) {
   return await getProductBySlug(slug)
 }
 
