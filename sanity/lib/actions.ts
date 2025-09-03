@@ -5,7 +5,12 @@ import {
   getProductBySlug,
   productsByCategory,
   getCategories,
+  getImagesBanner,
 } from './query'
+
+export async function getImagesBannerAction() {
+  return await getImagesBanner()
+}
 
 export async function searchProductsAction(searchTerm: string) {
   return await getSearchedProducts(searchTerm)

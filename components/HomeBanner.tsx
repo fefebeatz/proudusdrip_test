@@ -1,12 +1,13 @@
 import React from 'react'
 import BannerImages from './BannerImages'
 import Title from './Title'
-import { getImagesBanner } from '@/sanity/lib/query'
+// import { getImagesBanner } from '@/sanity/lib/query'
 import ProductGrid from './ProductGrid'
+import { getImagesBannerAction } from '@/sanity/lib/actions'
 
 const HomeBanner = async () => {
   // Obtention des images
-  const data = await getImagesBanner()
+  const data = await getImagesBannerAction()
 
   return (
     <div className='flex flex-col items-center gap-5'>
