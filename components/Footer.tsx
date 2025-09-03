@@ -5,7 +5,7 @@ import SocialMedia from './SocialMedia'
 import { Input } from './ui/input'
 import { quickLinksData } from '@/constants'
 import Link from 'next/link'
-import { getCategories } from '@/lib/query'
+import { getCategories } from '@/sanity/lib/query'
 import { CategoryProps } from './ProductGrid'
 import FooterYear from './FooterYear'
 

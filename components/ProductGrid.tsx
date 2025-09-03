@@ -1,13 +1,14 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import HomeTabBar from './HomeTabBar'
-import { getCategories, productsByCategory } from '@/lib/query'
 import ProductCard from './ProductCard'
 import NoProductsAvailable from './NoProductsAvailable'
 import { Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 
 export type CategoryProps = {
+  _id: string
   title: string
 }
 
@@ -47,31 +48,33 @@ export type ProductType = {
   description?: string
 }
 
-const ProductGrid = () => {
-  const [categories, setCategories] = useState<CategoryProps[]>([])
-  const [selectedTab, setSelectedTab] = useState('')
-  const [products, setProducts] = useState<ProductType[]>([])
+type Props = {
+  categories: CategoryProps[]
+  initialCategory: string
+  initialProducts: ProductType[]
+}
+
+const ProductGrid = ({
+  categories,
+  initialCategory,
+  initialProducts,
+}: Props) => {
+  const [selectedTab, setSelectedTab] = useState(initialCategory)
+  const [products, setProducts] = useState<ProductType[]>(initialProducts)
   const [loading, setLoading] = useState(false)
 
-  // Obtention des catégories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const data = await getCategories()
-      setCategories(data)
-      if (data.length > 0) {
-        setSelectedTab(data[0].title)
-      }
-    }
-    fetchCategories()
-  }, [])
+  const [hasLoadedInitial, setHasLoadedInitial] = useState(false)
 
-  // filtrer les articles par catégorie
   useEffect(() => {
     if (!selectedTab) return
+
     const fetchProducts = async () => {
       setLoading(true)
       try {
-        const data = await productsByCategory(selectedTab)
+        const res = await fetch(
+          `/api/products?category=${encodeURIComponent(selectedTab)}`
+        )
+        const data = await res.json()
         setProducts(data)
       } catch (error) {
         console.error("Erreur lors de l'obtention des produits:", error)
@@ -79,8 +82,16 @@ const ProductGrid = () => {
         setLoading(false)
       }
     }
+
+    // 1er rendu → on ne refait pas de fetch, on utilise les produits déjà passés en props
+    if (!hasLoadedInitial && selectedTab === initialCategory) {
+      setHasLoadedInitial(true)
+      return
+    }
+
+    // toutes les fois suivantes → refetch normal
     fetchProducts()
-  }, [selectedTab])
+  }, [selectedTab, initialCategory, hasLoadedInitial])
 
   return (
     <div className='mt-5 flex flex-col items-center'>
@@ -90,7 +101,6 @@ const ProductGrid = () => {
         categories={categories}
       />
 
-      {/* Affichage des articles */}
       {loading ? (
         <div className='flex flex-col items-center justify-center py-10 min-h-80 space-y-4 text-center bg-gray-100 rounded-lg w-full mt-10'>
           <div className='flex items-center space-x-2 text-blue-600'>
@@ -100,27 +110,23 @@ const ProductGrid = () => {
             </span>
           </div>
         </div>
+      ) : products.length ? (
+        <div className='grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4 mt-10 w-full'>
+          {products.map((product) => (
+            <AnimatePresence key={product._id}>
+              <motion.div
+                layout
+                initial={{ opacity: 0.2 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
+            </AnimatePresence>
+          ))}
+        </div>
       ) : (
-        <>
-          {products.length ? (
-            <div className='grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4 mt-10 w-full'>
-              {products.map((product: ProductType) => (
-                <AnimatePresence key={product._id}>
-                  <motion.div
-                    layout
-                    initial={{ opacity: 0.2 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <ProductCard product={product} />
-                  </motion.div>
-                </AnimatePresence>
-              ))}
-            </div>
-          ) : (
-            <NoProductsAvailable selectedTab={selectedTab} />
-          )}
-        </>
+        <NoProductsAvailable selectedTab={selectedTab} />
       )}
     </div>
   )
