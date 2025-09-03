@@ -3,17 +3,10 @@ import BannerImages from './BannerImages'
 import Title from './Title'
 import { client } from '@/sanity/lib/client'
 import { sliderQuery } from '@/sanity/lib/query'
-import { getCategories, productsByCategory } from '@/sanity/lib/query'
 import ProductGrid from './ProductGrid'
 
 const HomeBanner = async () => {
   const data = await client.fetch(sliderQuery)
-
-  const categories = await getCategories()
-  const initialCategory = categories.length > 0 ? categories[0].title : ''
-  const initialProducts = initialCategory
-    ? await productsByCategory(initialCategory)
-    : []
 
   return (
     <div className='flex flex-col items-center gap-5'>
@@ -28,11 +21,7 @@ const HomeBanner = async () => {
       </p>
 
       {/* Section des produits */}
-      <ProductGrid
-        categories={categories}
-        initialCategory={initialCategory}
-        initialProducts={initialProducts}
-      />
+      <ProductGrid />
     </div>
   )
 }
