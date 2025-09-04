@@ -1,6 +1,6 @@
 import { client } from '@/sanity/lib/client'
 import { defineQuery } from 'next-sanity'
-import { sanityFetch } from './live'
+// import { sanityFetch } from './live'
 
 // La bannière
 export async function getImagesBanner() {
@@ -20,6 +20,7 @@ export async function getImagesBanner() {
 export async function getCategories() {
   const categories = await client.fetch(`
     *[_type == "category"]{
+    _id,
       title,
     }
   `)
@@ -57,11 +58,16 @@ export async function getProductBySlug(slug: string) {
   )
 
   try {
-    const product = await sanityFetch({
-      query,
-      params: { slug },
-    })
-    return product.data || null
+    // const product = await sanityFetch({
+    //   query,
+    //   params: { slug },
+    // })
+    // return product.data || null
+    const params = {
+      slug: slug,
+    }
+    const product = await client.fetch(query, params)
+    return product || null
   } catch (error) {
     console.error("Erreur lors de l'obtention du produit:", error)
     return []

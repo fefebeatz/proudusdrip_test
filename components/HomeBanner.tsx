@@ -1,13 +1,20 @@
 import React from 'react'
 import BannerImages from './BannerImages'
 import Title from './Title'
-// import { getImagesBanner } from '@/sanity/lib/query'
+import {
+  getCategories,
+  getImagesBanner,
+  getProducts,
+  // productsByCategory,
+} from '@/sanity/lib/query'
 import ProductGrid from './ProductGrid'
-import { getImagesBannerAction } from '@/sanity/lib/actions'
+// import { getImagesBannerAction } from '@/sanity/lib/actions'
 
 const HomeBanner = async () => {
   // Obtention des images
-  const data = await getImagesBannerAction()
+  const data = await getImagesBanner()
+  const categories = await getCategories()
+  const products = await getProducts()
 
   return (
     <div className='flex flex-col items-center gap-5'>
@@ -22,7 +29,7 @@ const HomeBanner = async () => {
       </p>
 
       {/* Section des produits */}
-      <ProductGrid />
+      <ProductGrid categoriesParam={categories} productsParam={products} />
     </div>
   )
 }

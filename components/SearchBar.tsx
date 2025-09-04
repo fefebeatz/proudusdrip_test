@@ -16,9 +16,11 @@ import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
 import PriceView from './PriceView'
 import AddToCardButton from './AddToCardButton'
-import { searchProductsAction } from '@/sanity/lib/actions'
+interface Props {
+  productsParam: ProductType[]
+}
 
-const SearchBar = () => {
+const SearchBar = ({ productsParam }: Props) => {
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState<ProductType[]>([])
   const [loading, setLoading] = useState(false)
@@ -33,7 +35,9 @@ const SearchBar = () => {
     setLoading(true)
     try {
       // const data = await getSearchedProducts(search)
-      const data = await searchProductsAction(search)
+      const data = productsParam.filter((p) =>
+        p.name.toLowerCase().includes(search.toLowerCase())
+      )
       setProducts(data)
     } catch (error) {
       console.error('Erreur lors de la récupération des articles.', error)

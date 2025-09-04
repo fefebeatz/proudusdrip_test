@@ -10,9 +10,11 @@ import { ClerkLoaded, SignedIn, SignInButton, UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { ListOrdered } from 'lucide-react'
 import Image from 'next/image'
+import { getProducts } from '@/sanity/lib/query'
 
 const Header = async () => {
   const user = await currentUser()
+  const products = await getProducts()
 
   return (
     <header className='sticky top-0 bg-white border-b border-gray-400 py-5 w-full z-50'>
@@ -31,7 +33,7 @@ const Header = async () => {
           </Logo>
         </div>
         <div className='w-auto md:w-1/3 flex items-center justify-end gap-5'>
-          <SearchBar />
+          <SearchBar productsParam={products} />
           <CartIcon />
           {/* Gestion de l'authentification */}
           <ClerkLoaded>

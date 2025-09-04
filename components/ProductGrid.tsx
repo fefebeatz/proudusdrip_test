@@ -1,17 +1,18 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import HomeTabBar from './HomeTabBar'
-// import { getCategories, productsByCategory } from '@/sanity/lib/query'
+// import { productsByCategory } from '@/sanity/lib/query'
 import ProductCard from './ProductCard'
 import NoProductsAvailable from './NoProductsAvailable'
 import { Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import {
-  getCategoryAction,
-  getProductByCategoryAction,
-} from '@/sanity/lib/actions'
+// import {
+//   getCategoryAction,
+//   getProductByCategoryAction,
+// } from '@/sanity/lib/actions'
 
 export type CategoryProps = {
+  _id: string
   title: string
 }
 
@@ -23,6 +24,7 @@ export type ProductType = {
     _id: string
     _type: 'category'
     title: string
+    _ref: string
   }
   slug: {
     _type: 'slug'
@@ -51,9 +53,14 @@ export type ProductType = {
   description?: string
 }
 
-const ProductGrid = () => {
+interface Props {
+  categoriesParam: CategoryProps[]
+  productsParam: ProductType[]
+}
+
+const ProductGrid = ({ categoriesParam, productsParam }: Props) => {
   const [categories, setCategories] = useState<CategoryProps[]>([])
-  const [selectedTab, setSelectedTab] = useState('')
+  const [selectedTab, setSelectedTab] = useState(categoriesParam[0].title)
   const [products, setProducts] = useState<ProductType[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -61,14 +68,18 @@ const ProductGrid = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       // const data = await getCategories()
-      const data = await getCategoryAction()
-      setCategories(data)
-      if (data.length > 0) {
-        setSelectedTab(data[0].title)
+      // const data = await getCategoryAction()
+      // setCategories(data)
+      // if (data.length > 0) {
+      //   setSelectedTab(data[0].title)
+      // }
+      setCategories(categoriesParam)
+      if (categoriesParam.length > 0) {
+        setSelectedTab(categoriesParam[0].title)
       }
     }
     fetchCategories()
-  }, [])
+  }, [categoriesParam])
 
   // filtrer les articles par catégorie
   useEffect(() => {
@@ -77,7 +88,12 @@ const ProductGrid = () => {
       setLoading(true)
       try {
         // const data = await productsByCategory(selectedTab)
-        const data = await getProductByCategoryAction(selectedTab)
+        const idCategorie = categoriesParam.find(
+          (cat) => cat.title === selectedTab
+        )?._id
+        const data = productsParam.filter(
+          (prod) => prod.category?._ref === idCategorie
+        )
         setProducts(data)
       } catch (error) {
         console.error("Erreur lors de l'obtention des produits:", error)
